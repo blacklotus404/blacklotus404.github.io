@@ -1,0 +1,669 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>SSH幽灵登录</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+body {
+	background-image: url("https://s3.bmp.ovh/imgs/2022/02/ec048bc5439ea56d.jpg");
+} 
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+}
+
+.simple-table-header {
+	background: rgb(247, 246, 243);
+	color: black;
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="d42fabab-c71f-4d83-9357-f9effb7ec044" class="page sans"><header><h1 class="page-title">SSH幽灵登录</h1></header><div class="page-body"><p id="2663de59-25a7-4834-bf52-69be7410092f" class="">对于linux的事后排查，蓝军通常会对utmp与wtmp进行检查，如何绕过这些记录的监管，对目标机器进行ssh幽灵登录需要红队掌握。</p><h2 id="45543677-ca78-4ba3-92fc-0bdb61fc5b03" class="">背景知识</h2><p id="9e824043-474a-4635-a1ae-d602a97e5e4c" class=""><mark class="highlight-red">并不是所有</mark>程序登录的时候都会调用utmp 和wtmp 日志记录接口，<mark class="highlight-red">只有交互式会话</mark>，才会调用utmp 和 wtmp的日志记录接口，比如 通过tty 或者pts或者图形界面登录的都会调用utmp 和wtmp 日志记录接口，然后我们在使用w和last命令的时候就会发现登录信息，其中w命令来源于utmp，last来源于wtmp。</p><p id="23645150-f574-406d-ad2b-41635ef5a9ef" class="">因此，诸如scp、sftp的命令涉及到ssh登录，但由于不使用交互式的会话，故不会被utmp以及wtmp记录。</p><p id="f9d29cba-41cc-4506-bdb0-165ee10c8831" class="">那么，我们便可以使用ssh命令模仿此类操作，ssh登录后不使用交互式的会话，而是调用一个二进制用于执行命令。</p><p id="87a422e1-5576-4e4e-ab35-05f11acfb76c" class="">pst/0表示0个终端窗口 tty表示完整的交互式终端</p><h2 id="854c52b3-41f4-47a0-aa0e-3ba66906054b" class="">具体实践</h2><p id="8946238c-48a9-42e9-a428-08a342c72eb4" class="">ssh username@ip /bin/bash -i</p><h3 id="207767d5-38ac-4f2c-b458-38cccc46cb63" class="">命令含义</h3><pre id="57acf5cf-3744-4191-b3a3-c689e84b79ff" class="code"><code>/bin/bash 表示ssh登录后调用/bin/bash二进制
+-i 表示通过交互式的方法使用/bin/bash，并非ssh命令的参数,而是/bin/bash的参数</code></pre><h3 id="639c89f6-edd4-4424-a57d-812203c38ac2" class="">实战效果</h3><p id="1c3b1f65-8798-452e-b1d6-4d143859e566" class="">ssh <a href="mailto:kali@172.16.173.128">kali@172.16.173.128</a> /bin/bash -i</p><figure id="55107d98-35b2-47b5-ac1e-d54260344c9d" class="image"><a href="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled.png"><img style="width:2866px" src="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled.png"/></a></figure><p id="6f1843b6-3206-41c8-95b3-4332933cb0f6" class="">同理，如果只需要在机器上执行一个命令 那么完全可以通过该方法进行执行(<mark class="highlight-red">但ssh日志仍会记录，建议登录ssh进行完整隐匿操作</mark>)</p><figure id="da418c63-11f5-42e2-aea0-ac5ce09a0e26" class="image"><a href="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%201.png"><img style="width:2952px" src="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%201.png"/></a></figure><figure id="8378e0f8-a9e3-47db-b2b3-ffb100a48782" class="image"><a href="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%202.png"><img style="width:2648px" src="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%202.png"/></a></figure><p id="795c57fb-1cf3-44c9-ab7d-f3826b30326b" class="">使用w及last查看登录记录，并未发现记录：</p><figure id="2ff4a7c7-7cbd-426b-b2dc-f9a0fea8f701" class="image"><a href="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%203.png"><img style="width:2952px" src="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%203.png"/></a></figure><h2 id="77f986e8-afe5-4ceb-b704-6b2d8efb49cf" class="">痕迹研究</h2><h3 id="821f8888-f3c7-42f4-b8ec-3ceeaef74580" class="">网络连接</h3><p id="bf5f3c15-b474-4a54-b19c-b02ab589f1cb" class="">若蓝队排查时ssh连接仍未断开，则可通过网络连接发现记录</p><figure id="26899c58-f55b-42e4-a77d-fa7914ba8125" class="image"><a href="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%204.png"><img style="width:2952px" src="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%204.png"/></a></figure><h3 id="527570d3-c3e2-46ec-ad72-94748a3fe468" class="">进程信息</h3><p id="f3ac663e-f8a5-47ba-b411-70479944e400" class="">若蓝队排查时ssh连接仍未断开，则可通过进程信息发现记录</p><figure id="6dd7fca7-68f5-4f51-a4ce-d5957c084691" class="image"><a href="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%205.png"><img style="width:2952px" src="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%205.png"/></a></figure><p id="42abf4de-355e-40c0-8df8-0e4bfec2a842" class="">第一个记录为连接仍为断开的情况，可以看到这里显示了kali正在连接，且状态为notty，</p><p id="44787eab-dbf1-4ff2-877f-a65e080530fb" class="">第二个记录为连接断开的情况，此时已无记录。</p><h3 id="88e00d7d-aead-4be5-8eee-6f20019339c1" class="">ssh日志</h3><p id="de85e4ec-d2cd-4d36-bf78-9a374952cf06" class="">因为存在登录行为，故ssh日志会进行记录</p><figure id="2aae1a47-b3ad-41f4-9957-730f79996700" class="image"><a href="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%206.png"><img style="width:2952px" src="SSH%E5%B9%BD%E7%81%B5%E7%99%BB%E5%BD%95%2055107d9835b247b5ac1ed54260344c9d/Untitled%206.png"/></a></figure><h2 id="46f0b802-b7bc-4466-9c34-5056d3d13db1" class="">完整隐匿方案</h2><h3 id="7e5da6d6-02bf-4c9f-8317-2da37c746b60" class="">使用高匿代理</h3><p id="7e246409-77a5-4f1c-89c5-9d0a6e2b9e76" class="">防止处于连接状态下蓝军上机排查抓到IP被溯源</p><h3 id="acc68ed4-a1ce-4fb7-b629-a5f9a3e16070" class="">ssh幽灵登录</h3><p id="3a4f57fd-872d-42b8-92dd-b7218dee4700" class="">ssh <a href="mailto:kali@172.16.173.128">kali@172.16.173.128</a> /bin/bash -i</p><p id="33b7ab0f-7787-45b8-b07b-d70f8080fc5d" class="">绕过utmp与wtmp日志监控</p><h3 id="13380b45-2906-4bfa-8c0a-0fced62e507b" class="">删除ssh日志</h3><p id="fcff3766-1a3b-4166-b337-2d6fc3dbf072" class="">针对性删除ssh日志</p><p id="4e4f9c09-12ce-4efe-8b2d-753a55f0bbfe" class="">
+</p><h2 id="e4def1d1-4ab3-48eb-ac14-0ae5441b7e4e" class="">蓝军检测手段</h2><p id="41b0624d-54ad-4dca-8942-4c15aa57ca0f" class="">机器无对应日志，只能借助流量或日志设备进行排查，否则工作无法开展。</p><p id="a38548f7-7f07-4602-b8da-e3a115fe2627" class="">
+</p><p id="01d09417-bfe6-41fa-b16f-87abb91b9d70" class="">
+</p><p id="a1153c80-e4a9-410c-8a46-39fe59800d39" class="">
+</p><p id="486b6f67-e7c2-4fae-8cb0-d739835695c5" class="">
+</p><p id="6ef192a3-3f83-479f-b785-31f599b54e96" class="">
+</p><p id="e27d80a7-8e8f-4a32-9738-2ce7697e9916" class="">
+</p><p id="88d478f3-7ba2-4ced-808b-ae1e6ec1bc34" class="">
+</p></div></article></body></html>
