@@ -1,0 +1,670 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>ADS隐藏Webshell</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+body {
+	background-image: url("https://s3.bmp.ovh/imgs/2022/02/ec048bc5439ea56d.jpg");
+} 
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+}
+
+.simple-table-header {
+	background: rgb(247, 246, 243);
+	color: black;
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="4a10fb64-1fff-4ffa-a702-41f9112d575b" class="page sans"><header><h1 class="page-title">ADS隐藏Webshell</h1></header><div class="page-body"><h2 id="27c0a441-3f32-441d-8a16-da6d387d2687" class="">背景知识</h2><p id="186314dd-2932-4b26-8a4d-320167116176" class="">NTFS交换数据流（Alternate　Data　Streams，简称ADS）是NTFS磁盘格式的一个特性，在NTFS文件系统下，每个文件都可以存在多个数据流。通俗的理解，就是其它文件可以“<mark class="highlight-red">寄宿</mark>”在某个文件身上，而在资源管理器中却<mark class="highlight-red">只能看到宿主文件</mark>，找不到寄宿文件。
+一、ADS数据流文件的创建
+　　在NTFS分区创建ADS数据流文件有两种形式：一是指定宿主文件；二是创建单独的ADS文件。常用的创建命令有两个：<mark class="highlight-red">echo</mark>和<mark class="highlight-red">type</mark>。
+1、创建指定宿主文件的ADS数据流文件
+　　第一步：创建宿主文件
+　　宿主文件是指在Windows中可以正常显示、运行或编辑的任何类型文件。假设D:盘为NTFS分区，我们用记事本创建一个txt格式的文本文件host.txt，随意输入一些内容，保存在D:盘根目录中。记住该文件的大小。
+       第二步：关联数据流文件
+　　进入DOS提示符状态，在“D:\&gt;”状态输入命令“echo　&quot;this　is　a　test　file&quot;&gt;<mark class="highlight-red">host.txt:ads.txt</mark>”。这样我们就创建了一个名为ads.txt，内容为“this　is　a　test　file”的数据流文件，并与宿主文件host.txt进行了关联，即<mark class="highlight-red">ads.txt文件成了host.txt的一个寄生文件</mark>。此时，无论是用dir命令还是在资源管理器中，均无法看到ads.txt文件，只能看到host.txt文件，且其大小未发生任何改变！</p><p id="210bf111-f8cd-4850-a7e9-6fbcf09b1344" class="">2、创建单独的ADS数据流文件</p><p id="740f0aa7-2386-4fbb-a3f2-90f19cd6dedf" class="">在DOS提示符状态输入命令“echo　&quot;this　is　a　test　file&quot;&gt;:ads.txt”，这样就在当前目录下创建了一个未指明宿主文件的名为ads.txt的数据流文件，它同样无法看到。可以说，这个文件已经在系统中隐身了。由于未指定宿主文件，一般的方法无法删除，唯一能将之删除的办法就是删除其所在目录（<mark class="highlight-red">因为没有宿主文件用于删除，故只能删除其所在目录</mark>）。如果这样的单独数据流文件存在于磁盘根目录，那么删除它将是一件非常棘手的事！</p><p id="a45c8c15-e482-4abb-98d3-9187a20cf53a" class="">除了文本文件以外，包括可执行文件在内的任何常规文件都可以被设置成ADS数据流文件。例如“type　c:\winnt\system32\sol.exe&gt;host.txt:sol2.exe”命令就会把sol.exe文件设置成host.txt的ADS数据流文件sol2.exe。我们甚至可以对系统的一些重要文件附加数据流文件，如：“type　im-age.bmp&gt;c:\windows\explore.exe:im-age.bmp”命令就会将图片image.bmp设为explore.exe的数据流文件。不难看出，ADS数据流文件的基本创建形式就是</p><p id="c8a74511-bf9a-4745-8660-546c2535f695" class=""><mark class="highlight-red"><strong>宿主文件名:数据流文件名，中间用冒号间隔</strong></mark><strong>。</strong></p><p id="88b9aae7-e118-46fb-923c-51b9fd2daa8f" class="">二、ADS数据流文件的<strong>查看</strong> 　　</p><p id="1805b514-b7c5-44f7-8555-fc29f0da9e5c" class="">在上述例子中，我们创建了一个ads.txt寄宿在host.txt文件上，如何查看ads.txt文件呢？可以用“notepad　host.txt:ads.txt”命令来查看ads.txt文件的内容（如图一所示），你会发现其内容正是“this　is　a　test　file”。依此类推，用“mspaint.exe　ex-plore.exe:image.bmp”命令就可以查看寄宿在explore.exe中的图片。实际上，ADS数据流文件的<strong>通用查看方法</strong>是：<mark class="highlight-red">ADS文件对应的打开/编辑程序 宿主文件名:数据流文件名</mark>。</p><p id="83b53a03-40c3-40ed-b195-7d9c467a2352" class="">在当前目录执行<mark class="highlight-red"><strong>dir /r</strong></mark><strong> 命令</strong>，会显示当前目录下的ADS文件在文件末端会有:$DATA</p><p id="776aaa3d-f183-4ad6-80f8-2e2a6f708eee" class="">三、ADS数据流文件的<strong>执行</strong></p><p id="dd75d682-4080-436d-b0c1-ca290a9f361d" class="">当一个可执行文件被隐藏在ADS数据流文件中后，我们可以通过start命令来执行这个程序。假设我们用“type　c:\windows\system32\notepad.exe &gt; host.txt:np.exe”命令将记事本设为了host.txt文件的数据流文件，那么就可以通过“start　.\host.txt:np.exe”命令来运行记事本。请注意：命令行中的“.\”是相对路径表示方法，说明当前目录就是host.txt所在的目录。如果当前目录不是host.txt所在的目录，则应用绝对路径表示法指明host.txt所在的路径，否则，系统会报错！</p><p id="ed0cbd2f-86e9-45ed-bb64-84e3bc8ba7d8" class="">
+</p><h2 id="76bb7f69-5c63-4135-af25-d2680d55e235" class="">实战效果</h2><p id="749d8bde-22a7-4f4c-a3b2-b6407483d476" class="">在网站upload目录下放置两个文件，一个是用于文件包含的lfi.php，一个是空的index.php</p><figure id="550beb41-609e-4b2a-8ee9-af5dfa7e0e26" class="image"><a href="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled.png"><img style="width:1121px" src="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled.png"/></a></figure><p id="ed993cf0-fc4c-45f0-9f44-b3f1a714f58f" class="">lfi.php具体代码：</p><pre id="0f69953c-4e70-454a-876e-a2a7c2cf4e3e" class="code"><code>&lt;?php $file = $_GET[&#x27;file&#x27;]; include($file); ?&gt;</code></pre><p id="04f2905c-0421-45da-8e0f-5c3dc505b004" class="">将恶意数据流寄生在index.php中，命名为evil.php</p><pre id="cfd245ab-b414-410a-b47b-c89fa8748cac" class="code"><code>echo ^&lt;?php phpinfo();?^&gt; &gt; index.php:evil.php</code></pre><figure id="db2642a0-e2d4-45ed-b5a4-9d0549ddb533" class="image"><a href="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%201.png"><img style="width:1809px" src="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%201.png"/></a></figure><p id="6f2f222e-3e7f-4f85-9821-287036a740f9" class="">index.php文件大小未发生改变</p><p id="002bb87a-c941-40e7-b72c-387e826ca58d" class="">利用文件包含<a href="http://192.168.203.131/upload//lfi.php?file=index.php:evil.php">http://192.168.203.131/upload//lfi.php?file=index.php:evil.php</a></p><p id="af729a82-408c-4eb2-a7aa-27d04613a736" class="">成功访问phpinfo</p><figure id="0ee7a834-4f12-49c9-941a-61950ba9952d" class="image"><a href="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%202.png"><img style="width:1920px" src="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%202.png"/></a></figure><h2 id="a6403118-52dd-4c8c-a1ab-e60e8bcd9428" class="">思考</h2><p id="c9d736b5-1d6c-467d-bf41-cbfa18b6d220" class="">能否通过Web直接访问ADS流文件？</p><p id="56700170-1a14-4638-a4d3-bba55d9e33c5" class="">尝试访问：<a href="http://192.168.203.131/upload/index.php:evil.php">http://192.168.203.131/upload/index.php:evil.php</a></p><p id="6e8b2647-08ba-4b32-93e0-b4f682a78c28" class="">无权限</p><figure id="0abc36c9-9753-4acb-b824-8836e2f2ec8b" class="image"><a href="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%203.png"><img style="width:1920px" src="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%203.png"/></a></figure><p id="9b0d923b-83fd-4969-b1f1-adbd307231c2" class="">因此，ADS隐藏的文件<mark class="highlight-red">无法</mark>通过Web直接访问，需要结合文件包含进行访问。</p><h2 id="47563c95-c619-47d2-adb5-dd58f7d299f1" class="">痕迹研究</h2><h3 id="2f94a5eb-b830-413f-a061-8f6000c73997" class="">使用命令可以列出ADS文件</h3><pre id="91159736-a627-4761-8e28-3ef417c95256" class="code"><code>dir /r</code></pre><figure id="6112bcac-5605-4a25-a8d9-fc27f7e1838b" class="image"><a href="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%204.png"><img style="width:1822px" src="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%204.png"/></a></figure><h3 id="466a0c39-ab2d-4c6b-aa91-a9080db3e03b" class="">使用对应程序查看内容</h3><p id="aa7fb1d3-68c6-4f53-b3ce-1bb6eb69c7df" class="">这里使用notpad</p><pre id="74b83413-d067-48fc-b823-09e6b5a706ef" class="code"><code>notepad index.php:evil.php</code></pre><figure id="22f91b7a-e80d-4a48-9f69-de9becc8dafd" class="image"><a href="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%205.png"><img style="width:1803px" src="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%205.png"/></a></figure><h3 id="880e4242-3a9f-4c65-9474-15e177c52282" class="">删除ADS流文件</h3><p id="1aa48e00-93af-4f9d-86ca-b74c498f794b" class="">首先对宿主文件进行备份</p><pre id="390c7a2d-8df1-4c24-9cc8-f80302dc91ad" class="code"><code>type index.php &gt; index_Clean.php</code></pre><p id="3032ed54-d24a-4a5e-b076-684bdc584fcb" class="">再对被感染的宿主文件进行删除</p><p id="6d599a91-74d7-4171-afbe-dc6630b86814" class="">
+</p><figure id="649b55d7-9e98-4dc8-96bd-5f492b00102a" class="image"><a href="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%206.png"><img style="width:1891px" src="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%206.png"/></a></figure><p id="6f2f4cb7-ffc5-4a1b-a5ec-58870b157530" class="">可以看到备份后的index_Clean.php文件没有被感染恶意的流文件，原因是ADS流文件<mark class="highlight-red">只对创建时</mark>指定宿主文件进行寄生。</p><p id="da6f4e70-dab9-4797-b87f-9b435574ce11" class="">备份后，删除被感染文件即可恢复且不影响业务</p><figure id="d9412dcb-3054-46b3-abab-1ba6ed46c183" class="image"><a href="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%207.png"><img style="width:1858px" src="ADS%E9%9A%90%E8%97%8FWebshell%20550beb41609e4b2a8ee9af5dfa7e0e26/Untitled%207.png"/></a></figure><h2 id="69878e4a-491c-449f-b14a-e55b6e16cb3e" class="">蓝军对应检测处置手段</h2><ul id="3b5e01bc-326a-4a5d-bf4c-641a7e007276" class="bulleted-list"><li style="list-style-type:disc">使用dir /r命令列出所有ADS流文件进行排查</li></ul><ul id="2ee725ec-7ccb-416b-91c3-33760429cf31" class="bulleted-list"><li style="list-style-type:disc">使用对应程序查看内容进行排查</li></ul><ul id="7e8b3140-2f8c-4338-9dec-6a5e3042b4ff" class="bulleted-list"><li style="list-style-type:disc">备份被感染文件后删除</li></ul><p id="4de16d77-365b-4445-be46-2fca7c437136" class="">
+</p></div></article></body></html>
