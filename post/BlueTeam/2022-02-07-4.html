@@ -1,0 +1,799 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Sysmon基础</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+body {
+	background-image: url("https://s3.bmp.ovh/imgs/2022/02/ec048bc5439ea56d.jpg");
+} 
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+}
+
+.simple-table-header {
+	background: rgb(247, 246, 243);
+	color: black;
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="765feb9a-c4c3-493e-be9e-302335f0cf05" class="page sans"><header><h1 class="page-title">Sysmon基础</h1></header><div class="page-body"><h1 id="ac3bc47a-e97e-4c34-95df-b18e6d80ca45" class="">安装</h1><h2 id="543df168-d12d-460c-80f2-66bb1c9651cb" class="">Install</h2><pre id="83d7fd2c-1ebc-4317-8184-5678445a3c52" class="code"><code>sysmon.exe -accepteula -i sysmonconfig-export.xml</code></pre><h2 id="5f7faee5-f614-4bd5-8c11-6b3a280b9bba" class="">Update configuration</h2><pre id="65c6ae97-cdf6-4002-85c7-66af36bfa70e" class="code"><code>sysmon.exe -c sysmonconfig-export.xml</code></pre><h2 id="9f8f7499-55ad-40b2-8d18-9768154149a3" class="">Uninstall</h2><pre id="275ae62e-8780-4eb6-b4a9-4d9bc5d7c521" class="code"><code>sysmon.exe -u</code></pre><h2 id="28d57645-e585-4569-89d6-281a5ec4958d" class="">Dump the current configuration</h2><pre id="e838b793-2986-460d-85c2-d021dcd5510f" class="code"><code>sysmon -c</code></pre><h2 id="0fb4c215-fd7e-466f-8bf6-5dd8b4355e4e" class="">Change the configuration to default settings</h2><pre id="2421f30b-1d06-4412-9a94-e3a4c7a8fd9a" class="code"><code>sysmon -c --</code></pre><h2 id="171aa5fe-b772-45db-8ed1-fb222691e015" class="">Show the configuration schema</h2><pre id="6b21d54c-b7d3-49bc-9ac1-e0099030c551" class="code"><code>sysmon -s</code></pre><h1 id="304554fa-9aae-4feb-879b-a6c3752c4302" class="">事件ID</h1><p id="90bcfc10-dc23-41e5-9b4a-54b11cc63699" class="">捕获到的事件ID如下</p><pre id="2d6f34f2-4abe-4baf-a277-5eb914230bb6" class="code"><code>Event ID 1: Process creation
+Event ID 2: A process changed a file creation time
+Event ID 3: Network connection
+Event ID 4: Sysmon service state changed
+Event ID 5: Process terminated
+Event ID 6: Driver loaded
+Event ID 7: Image loaded
+Event ID 8: CreateRemoteThread
+Event ID 9: RawAccessRead
+Event ID 10: ProcessAccess
+Event ID 11: FileCreate
+Event ID 12: RegistryEvent (Object create and delete)
+Event ID 13: RegistryEvent (Value Set)
+Event ID 14: RegistryEvent (Key and Value Rename)
+Event ID 15: FileCreateStreamHash
+Event ID 17: PipeEvent (Pipe Created)
+Event ID 18: PipeEvent (Pipe Connected)
+Event ID 19: WmiEvent (WmiEventFilter activity detected)
+Event ID 20: WmiEvent (WmiEventConsumer activity detected)
+Event ID 21: WmiEvent (WmiEventConsumerToFilter activity detected)
+Event ID 22: DNSEvent (DNS query)
+Event ID 23: FileDelete
+Event ID 24: Clipboard Changed
+Event ID 255: Error</code></pre><h3 id="114bba31-c81d-42a8-8f0b-1088ce850412" class="">官方说明</h3><pre id="5228736d-f9e1-4e0d-90f8-0d58f5dd0045" class="code"><code>Event ID 1: Process creation
+
+The process creation event provides extended information about a newly created process. The full command line provides context on the process execution. The ProcessGUID field is a unique value for this process across a domain to make event correlation easier. The hash is a full hash of the file with the algorithms in the HashType field.
+Event ID 2: A process changed a file creation time
+
+The change file creation time event is registered when a file creation time is explicitly modified by a process. This event helps tracking the real creation time of a file. Attackers may change the file creation time of a backdoor to make it look like it was installed with the operating system. Note that many processes legitimately change the creation time of a file; it does not necessarily indicate malicious activity.
+Event ID 3: Network connection
+
+The network connection event logs TCP/UDP connections on the machine. It is disabled by default. Each connection is linked to a process through the ProcessId and ProcessGUID fields. The event also contains the source and destination host names IP addresses, port numbers and IPv6 status.
+Event ID 4: Sysmon service state changed
+
+The service state change event reports the state of the Sysmon service (started or stopped).
+Event ID 5: Process terminated
+
+The process terminate event reports when a process terminates. It provides the UtcTime, ProcessGuid and ProcessId of the process.
+Event ID 6: Driver loaded
+
+The driver loaded events provides information about a driver being loaded on the system. The configured hashes are provided as well as signature information. The signature is created asynchronously for performance reasons and indicates if the file was removed after loading.
+Event ID 7: Image loaded
+
+The image loaded event logs when a module is loaded in a specific process. This event is disabled by default and needs to be configured with the –l option. It indicates the process in which the module is loaded, hashes and signature information. The signature is created asynchronously for performance reasons and indicates if the file was removed after loading. This event should be configured carefully, as monitoring all image load events will generate a large number of events.
+Event ID 8: CreateRemoteThread
+
+The CreateRemoteThread event detects when a process creates a thread in another process. This technique is used by malware to inject code and hide in other processes. The event indicates the source and target process. It gives information on the code that will be run in the new thread: StartAddress, StartModule and StartFunction. Note that StartModule and StartFunction fields are inferred, they might be empty if the starting address is outside loaded modules or known exported functions.
+Event ID 9: RawAccessRead
+
+The RawAccessRead event detects when a process conducts reading operations from the drive using the \\.\ denotation. This technique is often used by malware for data exfiltration of files that are locked for reading, as well as to avoid file access auditing tools. The event indicates the source process and target device.
+Event ID 10: ProcessAccess
+
+The process accessed event reports when a process opens another process, an operation that’s often followed by information queries or reading and writing the address space of the target process. This enables detection of hacking tools that read the memory contents of processes like Local Security Authority (Lsass.exe) in order to steal credentials for use in Pass-the-Hash attacks. Enabling it can generate significant amounts of logging if there are diagnostic utilities active that repeatedly open processes to query their state, so it generally should only be done so with filters that remove expected accesses.
+Event ID 11: FileCreate
+
+File create operations are logged when a file is created or overwritten. This event is useful for monitoring autostart locations, like the Startup folder, as well as temporary and download directories, which are common places malware drops during initial infection.
+Event ID 12: RegistryEvent (Object create and delete)
+
+Registry key and value create and delete operations map to this event type, which can be useful for monitoring for changes to Registry autostart locations, or specific malware registry modifications.
+
+Sysmon uses abbreviated versions of Registry root key names, with the following mappings:
+Event ID 12: RegistryEvent (Object create and delete)
+Key name 	Abbreviation
+HKEY_LOCAL_MACHINE 	HKLM
+HKEY_USERS 	HKU
+HKEY_LOCAL_MACHINE\System\ControlSet00x 	HKLM\System\CurrentControlSet
+HKEY_LOCAL_MACHINE\Classes 	HKCR
+Event ID 13: RegistryEvent (Value Set)
+
+This Registry event type identifies Registry value modifications. The event records the value written for Registry values of type DWORD and QWORD.
+Event ID 14: RegistryEvent (Key and Value Rename)
+
+Registry key and value rename operations map to this event type, recording the new name of the key or value that was renamed.
+Event ID 15: FileCreateStreamHash
+
+This event logs when a named file stream is created, and it generates events that log the hash of the contents of the file to which the stream is assigned (the unnamed stream), as well as the contents of the named stream. There are malware variants that drop their executables or configuration settings via browser downloads, and this event is aimed at capturing that based on the browser attaching a Zone.Identifier &quot;mark of the web&quot; stream.
+Event ID 16: ServiceConfigurationChange
+
+This event logs changes in the Sysmon configuration - for example when the filtering rules are updated.
+Event ID 17: PipeEvent (Pipe Created)
+
+This event generates when a named pipe is created. Malware often uses named pipes for interprocess communication.
+Event ID 18: PipeEvent (Pipe Connected)
+
+This event logs when a named pipe connection is made between a client and a server.
+Event ID 19: WmiEvent (WmiEventFilter activity detected)
+
+When a WMI event filter is registered, which is a method used by malware to execute, this event logs the WMI namespace, filter name and filter expression.
+Event ID 20: WmiEvent (WmiEventConsumer activity detected)
+
+This event logs the registration of WMI consumers, recording the consumer name, log, and destination.
+Event ID 21: WmiEvent (WmiEventConsumerToFilter activity detected)
+
+When a consumer binds to a filter, this event logs the consumer name and filter path.
+Event ID 22: DNSEvent (DNS query)
+
+This event is generated when a process executes a DNS query, whether the result is successful or fails, cached or not. The telemetry for this event was added for Windows 8.1 so it is not available on Windows 7 and earlier.
+Event ID 23: FileDelete (File Delete archived)
+
+A file was deleted. Additionally to logging the event, the deleted file is also saved in the ArchiveDirectory (which is C:\Sysmon by default). Under normal operating conditions this directory might grow to an unreasonable size - see event ID 26: FileDeleteDetected for similar behavior but without saving the deleted files.
+Event ID 24: ClipboardChange (New content in the clipboard)
+
+This event is generated when the system clipboard contents change.
+Event ID 25: ProcessTampering (Process image change)
+
+This event is generated when process hiding techniques such as &quot;hollow&quot; or &quot;herpaderp&quot; are being detected.
+Event ID 26: FileDeleteDetected (File Delete logged)
+
+A file was deleted.
+Event ID 255: Error
+
+This event is generated when an error occurred within Sysmon. They can happen if the system is under heavy load and certain tasked could not be performed or a bug exists in the Sysmon service.</code></pre><h1 id="96170bf3-3ffd-4477-a7bc-67971569528f" class="">自定义规则</h1><p id="7075bb44-c439-4d4d-8e47-29860cfbc151" class="">可根据Github上已公开规则框架针对性进行自定义添加与删除</p><pre id="0c7cde08-fee0-430d-89e8-bcf16aa54545" class="code"><code>1.ProcessCreate:只有exclude，不匹配系统自身默认会启动的一些服务程序，包括一些白名单程序启动。如果有额外的白名单程序不需要记录的可以添加进来。
+
+2.FileCreateTime:包括include和exclude，主要记录C:\Users下或exe文件创建时间被修改，不记录一些安装程序修改记录，比如setup/install这一类名字的，当然可能会有病毒为这个名字，看具体情况调整。
+
+3.NetworkConnect:包括include和exclude，这一块偏重于include，只记录一些特殊的连接，因为电脑经常联网会有大量的应用连接，会导致大量无用日志记录，所以这边只设置了一些可疑程序以及可疑端口连接监控，像powershell，cmd等等，或者目标端口为22,23,3389这一类的。可能会有一些网络连接记录不到，如果需要记录一些其他的网络连接，该需要手动修改这部分内容。这一块强制不记录主要是微软的一些连接。
+
+4.ProcessTerminate:只有include，记录设备程序被终止，或C:\Users下的程序被停止
+
+5.DriverLoad:只有exclude，不记录签名包含micrsoft、windows或以Intel的驱动加载。
+
+6.ImageLoad:只有include，但为空，表明不记录任何镜像加载。
+
+7.CreateRemoteThread：只有exclude，不记录一些系统程序的远程线程创建。
+
+8.RawAccessRead:只有include，但为空，表明不记录该事件日志。
+
+9.ProcessAccess:只有include，但为空，表明不记录该事件日志。
+
+10.FileCreate:包括include和exclude，主要记录一些运行会触发病毒行为的程序，包括exe、vbs、bat等等，还有一些特殊路径下文件创建，如startup路径下有文件创建，就比较可疑。其他位置需要记录的，手动添加路径或文件名。不记录一些临时目录或一些白名单程序会创建文件的行为。
+
+11.RegistryEvent:包括include和exclude，这两方面都有所平衡，一方面会记录病毒经常会访问的注册表路径，包括run，services一些启动项，RDP等等，另一方面不记录一些系统本身会修改的注册表路径，不然会充斥太多无用日志。
+
+12.FileCreateStreamHash:只有include，主要记录浏览器下载的一些可疑脚本文件。
+
+13.PipeEvent:只有include，但为空，表明不记录该事件日志。
+
+14.WmiEvent:只有include，但为空，表明不记录该事件日志。
+
+15.DnsQuery:只有exclude，这块就是排除一些正常并且频繁发生的域名解析，避免干扰。如果只需要记录某个域名解析，其实可以单独设置include过滤。</code></pre><h2 id="2022ce2b-2db5-4018-8983-5cf28c1cb675" class="">举例</h2><p id="28c95732-1035-4fbf-a6b0-b12c07def627" class="">处理LifeCalendar事件中，已知外联IOC为<a href="http://awcna.com/">awcna.com</a>，则可以在配置文件中的NetworkConnect部分加入Include规则</p><pre id="8a12e5a6-c3ae-4f9a-b325-3f18378bdd6a" class="code"><code>&lt;DestinationHostname condition=&quot;end with&quot;&gt;awcna.com&lt;/DestinationHostname&gt; &lt;!--LifeCalendarWorm--&gt;</code></pre><figure id="34565b3c-39d3-42f0-ad92-425b15ebd8e3" class="image"><a href="Sysmon%E5%9F%BA%E7%A1%80%2034565b3c39d342f0ad92425b15ebd8e3/Untitled.png"><img style="width:2000px" src="Sysmon%E5%9F%BA%E7%A1%80%2034565b3c39d342f0ad92425b15ebd8e3/Untitled.png"/></a></figure></div></article></body></html>
